@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asgiref = "==3.8.1"
+django-debug-toolbar = "==5.0.1"
+django-filter = "==25.1"
+djangorestframework = "==3.15.2"
+drf-nested-routers = "==0.94.1"
+faker = "==36.1.1"
+sqlparse = "==0.5.3"
+tzdata = "==2025.1"
+psycopg2 = "*"
+django = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
+social-auth-app-django = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.13"
