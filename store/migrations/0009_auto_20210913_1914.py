@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('store', '0009_alter_cartitem_quantity'),
+        ('store', '0008_alter_cartitem_quantity'),
     ]
 
     operations = [
