@@ -17,6 +17,8 @@ django = "*"
 djoser = "*"
 djangorestframework-simplejwt = "*"
 social-auth-app-django = "*"
+pillow = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 
