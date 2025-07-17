@@ -42,3 +42,6 @@ Thumbs.db
 # Work files
 sen/
 user/
+
+# Media files
+/media/
