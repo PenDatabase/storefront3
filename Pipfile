@@ -19,6 +19,7 @@ djangorestframework-simplejwt = "*"
 social-auth-app-django = "*"
 pillow = "*"
 django-cors-headers = "*"
+python-dotenv = "*"
 
 [dev-packages]
 
