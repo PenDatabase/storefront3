@@ -108,7 +108,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'storefront3',
-        'HOST': 'localhost',
+        'HOST': 'mysql',
         'USER': 'postgres',
         'PASSWORD': 'User1name2',
         'PORT': 5432
@@ -185,7 +185,7 @@ SIMPLE_JWT = {
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'localhost'
+EMAIL_HOST = 'smtp4dev'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 2525
@@ -194,3 +194,7 @@ DEFAULT_FROM_EMAIL = 'ceo@quantumleap.com'
 ADMINS = [
     ('Mosh', 'mosh@frombuy.com')
 ]
+
+DEBUG_TOOLBAR_CONFIG = {
+    'SHOW_TOOLBAR_CALLBACK': lambda request: True
+}
