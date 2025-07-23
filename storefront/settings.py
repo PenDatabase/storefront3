@@ -108,7 +108,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'storefront3',
-        'HOST': 'mysql',
+        'HOST': 'mysql ',
         'USER': 'postgres',
         'PASSWORD': 'User1name2',
         'PORT': 5432
@@ -198,3 +198,5 @@ ADMINS = [
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: True
 }
+
+CELERY_BROKER_URL = 'redis://redis:6379/1'
