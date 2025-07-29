@@ -46,3 +46,7 @@ nice code
 
 # Media files
 /media/
+
+# Static files (collected static files)
+/static/
+/staticfiles/
