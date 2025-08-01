@@ -202,15 +202,16 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 CELERY_BROKER_URL = 'redis://redis:6379/1'
-
-# ...existing code...
-
-CELERY_BROKER_URL = 'redis://redis:6379/1'
+CELERY_RESULT_BACKEND = 'redis://redis:6379/1'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'
 
 CELERY_BEAT_SCHEDULE = {
     'notify-customers': {
         'task': 'playground.tasks.notify_customers',
-        'schedule': 5.0,
+        'schedule': 10.0,
         'args': ['Hello World']
     },
 }
