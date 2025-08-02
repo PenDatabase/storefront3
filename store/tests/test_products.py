@@ -98,6 +98,7 @@ class TestRetrieveProduct:
 
 @pytest.mark.django_db
 class TestListProduct:
+    #Data is Paginated so is retrieved using response.data['results']
     def test_if_products_returns_products_list_and_200(self, api_client: test.APIClient):
         products = baker.make(Product, _quantity=10)
         
@@ -109,92 +110,88 @@ class TestListProduct:
     def test_if_no_products_returns_empty_list_and_200(self, api_client: test.APIClient):
         Product.objects.all().delete()
 
-        response = api_client.get(f'/store/collections/')
+        response = api_client.get(f'/store/products/')
 
         assert response.status_code == status.HTTP_200_OK
-        assert len(response.data) == 0
+        assert len(response.data['results']) == 0
 
 
-# @pytest.mark.django_db
-# class TestUpdateCollection:
-#     def test_if_user_is_anonymous_cannot_update_and_returns_401(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
+@pytest.mark.django_db
+class TestUpdateProduct:
+    def test_if_user_is_anonymous_cannot_update_and_returns_401(self, api_client: test.APIClient, valid_product_data):
+        product = baker.make(Product)
 
-#         response = api_client.put(f'/store/products/{collection.id}/', {'title': 'y'})
+        response = api_client.put(f'/store/products/{product.id}/', valid_product_data)
 
-#         assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-#     def test_if_user_is_not_admin_cannot_update_and_returns_401(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
-#         api_client.force_authenticate(User())
+    def test_if_user_is_not_admin_cannot_update_and_returns_403(self, api_client: test.APIClient, regular_user, valid_product_data):
+        product = baker.make(Product)
+        api_client.force_authenticate(regular_user)
 
-#         response = api_client.put(f'/store/products/{collection.id}/', {'title': 'y'})
+        response = api_client.put(f'/store/products/{product.id}/', valid_product_data)
 
-#         assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
-#     def test_if_user_is_admin_can_update_and_returns_200(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
-#         api_client.force_authenticate(User(is_staff=True))
+    def test_if_user_is_admin_can_update_and_returns_200(self, api_client: test.APIClient, admin_user, valid_product_data):
+        product = baker.make(Product)
+        api_client.force_authenticate(admin_user)
 
-#         response = api_client.put(f'/store/products/{collection.id}/', {'title': 'y'})
+        response = api_client.put(f'/store/products/{product.id}/', valid_product_data)
 
-#         assert response.status_code == status.HTTP_200_OK
-#         assert response.data == {
-#             "id": collection.id,
-#             "title": "y",
-#             "products_count": 0
-#         }
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == product.id
+        assert response.data['title'] == valid_product_data['title']
+        assert str(response.data['unit_price']) == str(valid_product_data['unit_price'])
 
-#     def test_if_user_is_anonymous_cannot_partial_update_and_returns_401(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
+    def test_if_user_is_anonymous_cannot_partial_update_and_returns_401(self, api_client: test.APIClient, valid_product_data):
+        product = baker.make(Product)
 
-#         response = api_client.patch(f'/store/products/{collection.id}/', {'title': 'y'})
+        response = api_client.patch(f'/store/products/{product.id}/', valid_product_data)
 
-#         assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-#     def test_if_user_is_not_admin_cannot_partial_update_and_returns_401(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
-#         api_client.force_authenticate(User())
+    def test_if_user_is_not_admin_cannot_partial_update_and_returns_403(self, api_client: test.APIClient, regular_user, valid_product_data):
+        product = baker.make(Product)
+        api_client.force_authenticate(regular_user)
         
-#         response = api_client.put(f'/store/products/{collection.id}/', {'title': 'y'})
+        response = api_client.put(f'/store/products/{product.id}/', valid_product_data)
 
-#         assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
-#     def test_if_user_is_admin_can_partial_update_and_returns_200(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
-#         api_client.force_authenticate(User(is_staff=True))
+    def test_if_user_is_admin_can_partial_update_and_returns_200(self, api_client: test.APIClient, admin_user, valid_product_data):
+        product = baker.make(Product)
+        api_client.force_authenticate(admin_user)
 
-#         response = api_client.patch(f'/store/products/{collection.id}/', {'title': 'y'})
+        response = api_client.patch(f'/store/products/{product.id}/', valid_product_data)
 
-#         assert response.status_code == status.HTTP_200_OK
-#         assert response.data == {
-#             "id": collection.id,
-#             "title": "y",
-#             "products_count": 0
-#         }
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == product.id
+        assert response.data['title'] == valid_product_data['title']
+        assert str(response.data['unit_price']) == str(valid_product_data['unit_price'])
 
 
-# @pytest.mark.django_db
-# class TestDeleteCollection:
-#     def test_if_user_is_anonymous_cannot_delete_and_returns_401(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
+@pytest.mark.django_db
+class TestDeleteProduct:
+    def test_if_user_is_anonymous_cannot_delete_and_returns_401(self, api_client: test.APIClient):
+        product = baker.make(Product)
 
-#         response = api_client.delete(f'/store/products/{collection.id}/')
+        response = api_client.delete(f'/store/products/{product.id}/')
 
-#         assert response.status_code == status.HTTP_401_UNAUTHORIZED
+        assert response.status_code == status.HTTP_401_UNAUTHORIZED
 
-#     def test_if_user_is_not_admin_cannot_delete_and_returns_401(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
-#         api_client.force_authenticate(User())
+    def test_if_user_is_not_admin_cannot_delete_and_returns_403(self, api_client: test.APIClient, regular_user):
+        product = baker.make(Product)
+        api_client.force_authenticate(regular_user)
 
-#         response = api_client.delete(f'/store/products/{collection.id}/')
+        response = api_client.delete(f'/store/products/{product.id}/')
 
-#         assert response.status_code == status.HTTP_403_FORBIDDEN
+        assert response.status_code == status.HTTP_403_FORBIDDEN
 
-#     def test_if_user_is_admin_can_delete_and_returns_204(self, api_client: test.APIClient):
-#         collection = baker.make(Collection)
-#         api_client.force_authenticate(User(is_staff=True))
+    def test_if_user_is_admin_can_delete_and_returns_204(self, api_client: test.APIClient, admin_user):
+        product = baker.make(Product)
+        api_client.force_authenticate(admin_user)
 
-#         response = api_client.delete(f'/store/products/{collection.id}/')
+        response = api_client.delete(f'/store/products/{product.id}/')
 
-#         assert response.status_code == status.HTTP_204_NO_CONTENT
+        assert response.status_code == status.HTTP_204_NO_CONTENT
